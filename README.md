@@ -7,6 +7,15 @@
 # Laravel 9 Datatables
 simple CRUD project created with laravel v9 with datatables
 
+## Requirements
+
+| no | name | version |
+| ------------- | ------------- | ------------- |
+| 1 | nginx | * |
+| 2 | php | >= 8.0 |
+| 3 | laravel | 9 |
+| 4 | mariaDB | >= 10 |
+
 ## Installation
 
 * clone this project
@@ -29,7 +38,7 @@ php artisan serve --port=8080
 ```
 * run server with php native
 ```
-php -S localhost:8080 -t public
+php -S 127.0.0.1:8080 -t public
 ```
 * done, just try run your project in browser to `http://127.0.0.1:8080`
 * **nginx server is recommended**
