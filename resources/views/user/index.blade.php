@@ -12,11 +12,23 @@
   </header>
 
   <div class="row mb-3">
-    <div class="col">
+    <div class="col d-flex justify-content-start">
       <a href="{{ route($type . '.create') }}" name="create" id="create" class="btn btn-outline-primary text-uppercase fw-bold">
-        <i class="fa-solid fa-plus"></i>
+        <i class="fa-solid fa-plus me-1"></i>
         {{ __('create') }}
       </a>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <div class="btn-group" role="group" aria-label="Basic outlined example">
+        <button type="button" id="exportExcel" class="btn btn-outline-primary">
+          <i class="fa-regular fa-file-excel me-1"></i>
+          {{ __('Excel') }}
+        </button>
+        <button type="button" id="exportPdf" class="btn btn-outline-primary">
+          <i class="fa-regular fa-file-pdf me-1"></i>
+          {{ __('PDF') }}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -74,6 +86,51 @@
     $(function() {
       $.fn.DataTable.ext.pager.numbers_length = 5;
 
+      var iconStatusActive = '<i class="fa-solid fa-circle-check text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Active"></i>';
+      var iconStatusNonActive = '<i class="fa-solid fa-lock text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Non Active"></i>';
+
+      function actionButton(id) {
+        var urlShow = '{{ route($type . ".show", ":id") }}';
+        urlShow = urlShow.replace(':id', id);
+
+        var urlEdit = '{{ route($type . ".edit", ":id") }}';
+        urlEdit = urlEdit.replace(':id', id);
+
+        var button = '' +
+          '<div class="btn-group">' +
+          '<button type="button" class="btn btn-default btn-sm dropdown-toggle" id="action-' + id + '" data-bs-toggle="dropdown" aria-expanded="false">' +
+          '<i class="fa-solid fa-ellipsis-vertical"></i>' +
+          '</button>' +
+
+          '<ul class="dropdown-menu dropdown-menu-end" id="action-' + id + '-menu" aria-labelledby="action-' + id + '">' +
+
+          '<li>' +
+          '<a href="' + urlShow + '" class="dropdown-item" type="button" name="view" id="' + id + '">' +
+          '<i class="fa-solid fa-eye me-1"></i> VIEW' +
+          '</a>' +
+          '</li>' +
+
+          '<li><div class="dropdown-divider"></div></li>' +
+          '<li>' +
+          '<a href="' + urlEdit + '" class="dropdown-item" type="button" name="edit" id="' + id + '">' +
+          '<i class="fa-solid fa-pen-to-square me-1"></i> EDIT' +
+          '</a>' +
+          '</li>' +
+
+          '<li><div class="dropdown-divider"></div></li>' +
+          '<li>' +
+          '<button class="dropdown-item delete-btn" type="button" name="delete" data-id="' + id + '" id="' + id + '">' +
+          '<i class="fa-solid fa-trash-can me-1"></i> DELETE' +
+          '</button>' +
+          '</li>' +
+
+          '</ul>' +
+          '</div>' +
+        '';
+
+        return button;
+      }
+
       var table = $('#data-table').DataTable({
         ajax: {
           url: "{{ route($type . '.index') }}",
@@ -104,8 +161,32 @@
           { name: 'username', data: 'username' },
           { name: 'phone', data: 'phone' },
           { name: 'email', data: 'email' },
-          { name: 'status', data: 'status', orderable: false, searchable: false },
-          { name: 'action', data: 'action', orderable: false, searchable: false },
+          {
+            name: 'status',
+            data: null,
+            defaultContent: "",
+            orderable: false,
+            searchable: false,
+            render: function ( data, type, row, meta ) {
+              var status = row.is_active;
+              if (status) {
+                return iconStatusActive;
+              } else {
+                return iconStatusNonActive;
+              }
+            }
+          },
+          {
+            name: 'action',
+            data: null,
+            defaultContent: "",
+            orderable: false,
+            searchable: false,
+            render: function ( data, type, row, meta ) {
+              var id = row.uuid;
+              return actionButton(id);
+            }
+          },
         ],
         columnDefs: [
           {
@@ -118,9 +199,11 @@
           },
         ],
         deferRender: true,
-        dom: "<'row'<'col-6'l><'col-6'p>>" +
-            "<'row'<'col-12'tr>>" +
-            "<'row'<'col-6'i><'col-6'p>>",
+        dom: "" +
+          "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'p>>" +
+          "<'row'<'col-sm-12'tr>>" +
+          "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>" +
+        "",
         fixedHeader: {
           header: true,
         },
@@ -162,6 +245,9 @@
         searching: true,
         serverSide: true,
         select: false,
+        buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
         drawCallback: function( settings ) {
           $('[data-bs-toggle="tooltip"]').tooltip({
             container : 'body'
@@ -169,8 +255,8 @@
         },
       });
 
-      $('#search').keypress(function(e){
-        table.search($(this).val()).draw() ;
+      $('#search').keypress(function(e) {
+        table.search($(this).val()).draw();
       });
 
       table.on('page.dt', function() {
@@ -221,6 +307,14 @@
             });
           }
         })
+      });
+
+      $('#exportExcel').on('click', function(e) {
+        table.buttons( '.buttons-excel' ).trigger();
+      });
+
+      $('#exportPdf').on('click', function(e) {
+        table.buttons( '.buttons-pdf' ).trigger();
       });
     });
     </script>

@@ -35,61 +35,16 @@ class UserController extends Controller
             ->addIndexColumn()
             ->editColumn('created_at', function ($row) {
                 return [
-                    'display' => date("Y-m-d H:i:s", strtotime($row->created_at)),
-                    'timestamp' => strtotime($row->created_at),
+                    'display' => $row->created_at->isoFormat('DD MMMM Y HH:mm:ss'),
+                    'timestamp' => $row->created_at->timestamp,
                 ];
             })
             ->editColumn('updated_at', function ($row) {
                 return [
-                    'display' => date("Y-m-d H:i:s", strtotime($row->updated_at)),
-                    'timestamp' => strtotime($row->updated_at),
+                    'display' => $row->updated_at->isoFormat('DD MMMM Y HH:mm:ss'),
+                    'timestamp' => $row->updated_at->timestamp,
                 ];
             })
-            ->addColumn('status', function ($data) {
-                $icon = null;
-                if ($data->is_active) {
-                    $icon = '<i class="fa-solid fa-circle-check text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Active"></i>';
-                } else {
-                    $icon = '<i class="fa-solid fa-lock text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Non Active"></i>';
-                }
-
-                return $icon;
-            })
-            ->addColumn('action', function ($data) {
-                $button = null;
-                $button .= '<div class="btn-group">';
-                $button .= '<button type="button" class="btn btn-default btn-sm dropdown-toggle" id="action-' . $data->uuid . '" data-bs-toggle="dropdown" aria-expanded="false">';
-                $button .= '<i class="fa-solid fa-ellipsis-vertical"></i>';
-                $button .= '</button>';
-
-                $button .= '<ul class="dropdown-menu dropdown-menu-end" id="action-' . $data->uuid . '-menu" aria-labelledby="action-' . $data->uuid . '">';
-
-                $button .= '<li>';
-                $button .= '<a href="' . route($this->type . '.show', $data->uuid) . '" class="dropdown-item" type="button" name="view" id="' . $data->uuid . '">';
-                $button .= '<i class="fa-solid fa-eye m-1"></i> VIEW';
-                $button .= '</a>';
-                $button .= '</li>';
-
-                $button .= '<li><div class="dropdown-divider"></div></li>';
-                $button .= '<li>';
-                $button .= '<a href="' . route($this->type . '.edit', $data->uuid) . '" class="dropdown-item" type="button" name="edit" id="' . $data->uuid . '">';
-                $button .= '<i class="fa-solid fa-pen-to-square m-1"></i> EDIT';
-                $button .= '</a>';
-                $button .= '</li>';
-
-                $button .= '<li><div class="dropdown-divider"></div></li>';
-                $button .= '<li>';
-                $button .= '<button class="dropdown-item delete-btn" type="button" name="delete" data-id="' . $data->uuid . '" id="' . $data->uuid . '">';
-                $button .= '<i class="fa-solid fa-trash-can m-1"></i> DELETE';
-                $button .= '</button>';
-                $button .= '</li>';
-
-                $button .= '</ul>';
-                $button .= '</div>';
-
-                return $button;
-            })
-            ->rawColumns(['action','status'])
             ->toJson();
         }
 

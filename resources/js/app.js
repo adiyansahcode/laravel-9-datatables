@@ -1,7 +1,12 @@
 require('./bootstrap');
 require('moment');
-require('datatables.net-autofill-bs5');
+require('datatables.net/js/jquery.dataTables.js');
 require('datatables.net-bs5');
+require('datatables.net-autofill-bs5');
+require('datatables.net-buttons');
+require('datatables.net-buttons/js/buttons.colVis.js');
+require('datatables.net-buttons/js/buttons.html5.js');
+require('datatables.net-buttons/js/buttons.print.js');
 require('datatables.net-buttons-bs5');
 require('datatables.net-colreorder-bs5');
 require('datatables.net-fixedcolumns-bs5');

@@ -37,9 +37,12 @@ try {
   window.$ = window.jQuery = require('jquery');
   window.Popper = require('@popperjs/core').default;
   window.bootstrap = require('bootstrap');
+  window.Swal = require('sweetalert2');
+  window.JSZip = require('jszip');
+  window.pdfMake = require('pdfmake/build/pdfmake.js');
+  window.pdfFonts = require('pdfmake/build/vfs_fonts.js');
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
 } catch (e) {}
 
-/**
- * load sweetalert2
- */
-window.Swal = require('sweetalert2');
+
+
