@@ -1,11 +1,11 @@
-@extends('default.app')
+@extends('layouts.default')
 
 @section('title', __('Datatables CRUD'))
 
 @section('content')
 <div class="container shadow-sm bg-body rounded py-4">
   <header class="pb-3 mb-4 border-bottom">
-    <a href="{{ route('user.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
+    <a href="{{ route($type . '.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
       <img src="{{ asset('logo.svg') }}" class="me-2 fill-blue" width="50" height="50" alt="{{ config('app.name', 'Laravel 9') }} | @yield('title')">
       <span class="fs-4">@yield('title')</span>
     </a>
@@ -13,7 +13,7 @@
 
   <div class="row mb-3">
     <div class="col">
-      <a href="{{ route('user.create') }}" name="create" id="create" class="btn btn-outline-primary text-uppercase fw-bold">
+      <a href="{{ route($type . '.create') }}" name="create" id="create" class="btn btn-outline-primary text-uppercase fw-bold">
         <i class="fa-solid fa-plus"></i>
         {{ __('create') }}
       </a>
@@ -76,7 +76,7 @@
 
       var table = $('#data-table').DataTable({
         ajax: {
-          url: "{{ route('user.index') }}",
+          url: "{{ route($type . '.index') }}",
         },
         autoWidth: false,
         columns: [

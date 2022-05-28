@@ -1,4 +1,4 @@
-@extends('default.app')
+@extends('layouts.default')
 
 @section('title', __('Datatables CRUD - Create Data'))
 

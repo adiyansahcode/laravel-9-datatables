@@ -1,11 +1,11 @@
-@extends('default.app')
+@extends('layouts.default')
 
 @section('title', __('Datatables CRUD'))
 
 @section('content')
 <div class="container shadow-sm bg-body rounded py-4">
   <header class="pb-3 mb-4 border-bottom">
-    <a href="{{ route('user.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
+    <a href="{{ route($type . '.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
       <img src="{{ asset('logo.svg') }}" class="me-2 fill-blue" width="50" height="50" alt="{{ config('app.name', 'Laravel 9') }} | @yield('title')">
       <span class="fs-4">@yield('title')</span>
     </a>
@@ -17,24 +17,24 @@
         <tbody>
           <tr>
             <td class="text-capitalize">{{ __('name') }}</td>
-            <td>{{ $user->name }}</td>
+            <td>{{ $data->name }}</td>
           </tr>
           <tr>
             <td class="text-capitalize">{{ __('username') }}</td>
-            <td>{{ $user->username }}</td>
+            <td>{{ $data->username }}</td>
           </tr>
           <tr>
             <td class="text-capitalize">{{ __('phone') }}</td>
-            <td>{{ $user->phone }}</td>
+            <td>{{ $data->phone }}</td>
           </tr>
           <tr>
             <td class="text-capitalize">{{ __('email') }}</td>
-            <td>{{ $user->email }}</td>
+            <td>{{ $data->email }}</td>
           </tr>
           <tr>
             <td class="text-capitalize">{{ __('status') }}</td>
             <td>
-              @if($user->is_active)
+              @if($data->is_active)
                 <i class="fa-solid fa-circle-check text-primary me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Active"></i>
                 {{ __('Active') }}
               @else
@@ -45,7 +45,7 @@
           </tr>
         </tbody>
       </table>
-      <a href="{{ route('user.index') }}" name="cancel" id="cancel" class="btn btn-outline-danger text-uppercase">
+      <a href="{{ route($type . '.index') }}" name="cancel" id="cancel" class="btn btn-outline-danger text-uppercase">
         <i class="fa-solid fa-rotate-left me-1"></i>
         {{ __('back') }}
       </a>

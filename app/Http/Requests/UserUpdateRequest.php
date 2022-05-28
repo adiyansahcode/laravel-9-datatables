@@ -27,7 +27,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $uuid = $this->user->uuid;
+        $uuid = $this->data->uuid;
 
         return [
             'name' => [

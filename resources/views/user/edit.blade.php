@@ -1,11 +1,11 @@
-@extends('default.app')
+@extends('layouts.default')
 
 @section('title', __('Datatables CRUD - Edit Data'))
 
 @section('content')
 <div class="container shadow-sm bg-body rounded py-4">
   <header class="pb-3 mb-4 border-bottom">
-    <a href="{{ route('user.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
+    <a href="{{ route($type . '.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
       <img src="{{ asset('logo.svg') }}" class="me-2 fill-blue" width="50" height="50" alt="{{ config('app.name', 'Laravel 9') }} | @yield('title')">
       <span class="fs-4">@yield('title')</span>
     </a>
@@ -13,14 +13,14 @@
 
   <div class="row mb-3">
     <div class="col">
-      <form method="POST" action="{{ route('user.update', $user->uuid) }}" id="form-edit" class="needs-validation" accept-charset="UTF-8" enctype="multipart/form-data" novalidate>
+      <form method="POST" action="{{ route($type . '.update', $data->uuid) }}" id="form-edit" class="needs-validation" accept-charset="UTF-8" enctype="multipart/form-data" novalidate>
         @method('PUT')
         @csrf
 
         <div class="row mb-3">
           <label for="name" class="col-sm-2 col-form-label text-capitalize">{{ __('name') }}</label>
           <div class="col-sm-10">
-            <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}" placeholder="{{ __('Please Enter Name') }}" required>
+            <input type="text" name="name" id="name" class="form-control" value="{{ $data->name }}" placeholder="{{ __('Please Enter Name') }}" required>
             <div class="invalid-feedback" id="nameError">
               ERROR
             </div>
@@ -30,7 +30,7 @@
         <div class="row mb-3">
           <label for="username" class="col-sm-2 col-form-label text-capitalize">{{ __('username') }}</label>
           <div class="col-sm-10">
-            <input type="text" name="username" id="username" class="form-control" value="{{ $user->username }}" placeholder="{{ __('Please Enter Username') }}" required>
+            <input type="text" name="username" id="username" class="form-control" value="{{ $data->username }}" placeholder="{{ __('Please Enter Username') }}" required>
             <div class="invalid-feedback" id="usernameError">
               ERROR
             </div>
@@ -40,7 +40,7 @@
         <div class="row mb-3">
           <label for="phone" class="col-sm-2 col-form-label text-capitalize">{{ __('phone') }}</label>
           <div class="col-sm-10">
-            <input type="text" name="phone" id="phone" class="form-control" value="{{ $user->phone }}" placeholder="{{ __('Please Enter Phone') }}" required>
+            <input type="text" name="phone" id="phone" class="form-control" value="{{ $data->phone }}" placeholder="{{ __('Please Enter Phone') }}" required>
             <div class="invalid-feedback" id="phoneError">
               ERROR
             </div>
@@ -50,7 +50,7 @@
         <div class="row mb-3">
           <label for="email" class="col-sm-2 col-form-label text-capitalize">{{ __('email') }}</label>
           <div class="col-sm-10">
-            <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}" placeholder="{{ __('Please Enter Email') }}" required>
+            <input type="email" name="email" id="email" class="form-control" value="{{ $data->email }}" placeholder="{{ __('Please Enter Email') }}" required>
             <div class="invalid-feedback" id="emailError">
               ERROR
             </div>
@@ -92,7 +92,7 @@
             <div class="d-inline-block me-1">{{ __('Non Active') }}</div>
             <div class="form-check form-switch d-inline-block">
               @php
-              $statusChecked = $user->is_active
+              $statusChecked = $data->is_active
               ? 'checked'
               : '';
               @endphp
@@ -109,7 +109,7 @@
               {{ __('save') }}
             </button>
 
-            <a href="{{ route('user.index') }}" name="cancel" id="cancel" class="btn btn-outline-danger text-uppercase">
+            <a href="{{ route($type . '.index') }}" name="cancel" id="cancel" class="btn btn-outline-danger text-uppercase">
               <i class="fa-solid fa-x me-1"></i>
               {{ __('cancel') }}
             </a>
@@ -177,7 +177,7 @@
                 title: 'Success',
                 text: 'save successful',
               }).then(function (result) {
-                window.location.href = "{{ route('user.index') }}";
+                window.location.href = "{{ route($type . '.index') }}";
               })
             }
           },
