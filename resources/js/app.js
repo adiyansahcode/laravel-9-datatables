@@ -11,7 +11,7 @@ require('datatables.net-responsive-bs5');
 require('datatables.net-rowgroup-bs5');
 require('datatables.net-rowreorder-bs5');
 require('datatables.net-scroller-bs5');
-require('datatables.net-searchbuilder-bs5');
+// require('datatables.net-searchbuilder-bs5');
 require('datatables.net-searchpanes-bs5');
 require('datatables.net-select-bs5');
 require('datatables.net-staterestore-bs5');
