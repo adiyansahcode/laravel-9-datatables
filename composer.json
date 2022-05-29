@@ -13,6 +13,11 @@
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
+        "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.1",
+        "phpoffice/phpspreadsheet": "^1.23",
+        "psr/log": "^2.0",
+        "psr/simple-cache": "^2.0",
         "yajra/laravel-datatables-buttons": "^9.0",
         "yajra/laravel-datatables-html": "^9.0",
         "yajra/laravel-datatables-oracle": "^10.0"

@@ -14,20 +14,29 @@
   <div class="row mb-3">
     <div class="col d-flex justify-content-start">
       <a href="{{ route($type . '.create') }}" name="create" id="create" class="btn btn-outline-primary text-uppercase fw-bold">
-        <i class="fa-solid fa-plus me-1"></i>
+        <i class="fa-solid fa-plus fa-lg me-1"></i>
         {{ __('create') }}
       </a>
     </div>
     <div class="col d-flex justify-content-end">
       <div class="btn-group" role="group" aria-label="Basic outlined example">
-        <button type="button" id="exportExcel" class="btn btn-outline-primary">
+        <a href="{{ route($type . '.export') }}" class="btn btn-outline-primary text-capitalize">
+          <i class="fa-regular fa-file-excel fa-lg me-1"></i>
+          {{ __('Excel') }}
+        </a>
+
+        {{--
+        // client-side export
+        <button type="button" id="exportExcel" class="btn btn-outline-primary text-capitalize">
           <i class="fa-regular fa-file-excel me-1"></i>
           {{ __('Excel') }}
         </button>
-        <button type="button" id="exportPdf" class="btn btn-outline-primary">
-          <i class="fa-regular fa-file-pdf me-1"></i>
+        <button type="button" id="exportPdf" class="btn btn-outline-primary text-capitalize">
+          <i class="fa-regular fa-file-pdf fa-lg me-1"></i>
           {{ __('PDF') }}
         </button>
+        --}}
+
       </div>
     </div>
   </div>

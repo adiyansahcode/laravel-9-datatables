@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Requests\UserStoreRequest as StoreValidation;
 use App\Http\Requests\UserUpdateRequest as UpdateValidation;
+use App\Exports\UserExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -171,5 +173,10 @@ class UserController extends Controller
         $data->delete();
 
         return response()->json(['success' => 'delete success']);
+    }
+
+    public function export()
+    {
+        return new UserExport($this->type);
     }
 }
