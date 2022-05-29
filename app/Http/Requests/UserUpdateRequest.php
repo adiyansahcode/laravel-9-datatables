@@ -53,8 +53,7 @@ class UserUpdateRequest extends FormRequest
             ],
             'phone' => [
                 'required',
-                'max:100',
-                'string',
+                'numeric',
                 Rule::unique(User::class, 'phone')->ignore($uuid, 'uuid')->where(function ($query) {
                     return $query->whereNull('deleted_at');
                 }),

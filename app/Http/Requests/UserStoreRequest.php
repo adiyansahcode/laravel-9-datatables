@@ -51,8 +51,7 @@ class UserStoreRequest extends FormRequest
             ],
             'phone' => [
                 'required',
-                'max:100',
-                'string',
+                'numeric',
                 Rule::unique(User::class, 'phone')->where(function ($query) {
                     return $query->whereNull('deleted_at');
                 }),

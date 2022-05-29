@@ -165,6 +165,14 @@
           processData: false,
           beforeSend: function() {
             $("button").attr("disabled",true);
+
+            const onlyInputs = document.querySelectorAll('#form-edit input');
+            for(var i = 0; i < onlyInputs.length; i++) {
+                name = onlyInputs[i].id;
+                if (name) {
+                  document.getElementById(name).setCustomValidity('');
+                }
+            }
           },
           complete: function() {
             $("button").attr("disabled",false);
@@ -184,15 +192,9 @@
           error: function(jqXhr, json, errorThrown) {
             $("button").attr("disabled",false);
             var data = jqXhr.responseJSON;
-            $('.alert').hide();
-            $.each(data.errors, function(index, value ) {
-              var html = '';
-              html += '<div class="alert alert-danger" role="alert">';
-              html += '<span>' + value + '</span>';
-              html += '</div>';
-              $('#'+index+'Error').html(html);
-
-              document.getElementById(index).setCustomValidity(html);
+            $.each(data.errors, function(index, value) {
+              $('#'+index+'Error').html(value);
+              document.getElementById(index).setCustomValidity(value);
             });
             Swal.fire({
               icon: 'error',

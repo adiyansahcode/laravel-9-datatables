@@ -21,8 +21,12 @@
     <div class="col d-flex justify-content-end">
       <div class="btn-group" role="group" aria-label="Basic outlined example">
         <a href="{{ route($type . '.export') }}" class="btn btn-outline-primary text-capitalize">
-          <i class="fa-regular fa-file-excel fa-lg me-1"></i>
-          {{ __('Excel') }}
+          <i class="fa-solid fa-file-arrow-down fa-lg me-1"></i>
+          {{ __('Download') }}
+        </a>
+        <a href="{{ route($type . '.import') }}" class="btn btn-outline-primary text-capitalize">
+          <i class="fa-solid fa-file-arrow-up fa-lg me-1"></i>
+          {{ __('Upload') }}
         </a>
 
         {{--

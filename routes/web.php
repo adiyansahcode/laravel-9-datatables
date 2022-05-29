@@ -17,6 +17,9 @@ use App\Http\Controllers\UserController;
 Route::get('/', [UserController::class, 'index']);
 
 Route::get('user/export', [UserController::class, 'export'])->name('user.export');
+Route::get('user/import-template', [UserController::class, 'importTemplate'])->name('user.import.template');
+Route::get('user/import', [UserController::class, 'importForm'])->name('user.import');
+Route::post('user/import', [UserController::class, 'importStore'])->name('user.import');
 Route::resource('user', UserController::class)->parameters([
     'user' => 'data'
 ]);

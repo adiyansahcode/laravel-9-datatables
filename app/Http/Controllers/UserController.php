@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Requests\UserStoreRequest as StoreValidation;
 use App\Http\Requests\UserUpdateRequest as UpdateValidation;
+use App\Http\Requests\UserImportRequest as ImportValidation;
 use App\Exports\UserExport;
+use App\Exports\UserImportTemplate;
+use App\Imports\UserImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
@@ -30,6 +33,11 @@ class UserController extends Controller
         $this->type = 'user';
     }
 
+    /**
+     * Show list resource.
+     *
+     * @param Request $request
+     */
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -58,43 +66,52 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        return view($this->type . '.create');
+        return view($this->type . '.create', [
+            'type' => $this->type,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  StoreValidation  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(StoreValidation $request)
     {
-        if ($request->ajax()) {
-            $request->validated();
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                $request->validated();
 
-            $data = new DataDb();
-            $data->uuid = (string) Str::uuid();
-            $data->name = $request->name;
-            $data->username = $request->username;
-            $data->phone = $request->phone;
-            $data->email = $request->email;
-            $data->password = $request->password;
+                $data = new DataDb();
+                $data->uuid = (string) Str::uuid();
+                $data->name = $request->name;
+                $data->username = $request->username;
+                $data->phone = $request->phone;
+                $data->email = $request->email;
+                $data->password = $request->password;
 
-            if ($request->has('status')) {
-                $data->is_active = '1';
-                $data->activated_at = now()->toDateTimeString();
-            } else {
-                $data->is_active = '0';
-                $data->deactivated_at = now()->toDateTimeString();
+                if ($request->has('status')) {
+                    $data->is_active = '1';
+                    $data->activated_at = now()->toDateTimeString();
+                } else {
+                    $data->is_active = '0';
+                    $data->deactivated_at = now()->toDateTimeString();
+                }
+
+                $data->save();
+
+                DB::commit();
+
+                return response()->json(['success' => 'save success']);
             }
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-            $data->save();
-
-            return response()->json(['success' => 'save success']);
+            throw $e;
         }
     }
 
@@ -102,7 +119,6 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param  DataDb  $data
-     * @return \Illuminate\Http\Response
      */
     public function show(DataDb $data)
     {
@@ -116,7 +132,6 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  DataDb  $data
-     * @return \Illuminate\Http\Response
      */
     public function edit(DataDb $data)
     {
@@ -131,33 +146,41 @@ class UserController extends Controller
      *
      * @param  UpdateValidation  $request
      * @param  DataDb  $data
-     * @return \Illuminate\Http\Response
      */
     public function update(UpdateValidation $request, DataDb $data)
     {
-        if ($request->ajax()) {
-            $request->validated();
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                $request->validated();
 
-            $data->name = $request->name;
-            $data->username = $request->username;
-            $data->phone = $request->phone;
-            $data->email = $request->email;
+                $data->name = $request->name;
+                $data->username = $request->username;
+                $data->phone = $request->phone;
+                $data->email = $request->email;
 
-            if ($request->has('password')) {
-                $data->password = $request->password;
+                if ($request->has('password')) {
+                    $data->password = $request->password;
+                }
+
+                if ($request->has('status')) {
+                    $data->is_active = '1';
+                    $data->activated_at = now()->toDateTimeString();
+                } else {
+                    $data->is_active = '0';
+                    $data->deactivated_at = now()->toDateTimeString();
+                }
+
+                $data->save();
+
+                DB::commit();
+
+                return response()->json(['success' => 'update success']);
             }
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-            if ($request->has('status')) {
-                $data->is_active = '1';
-                $data->activated_at = now()->toDateTimeString();
-            } else {
-                $data->is_active = '0';
-                $data->deactivated_at = now()->toDateTimeString();
-            }
-
-            $data->save();
-
-            return response()->json(['success' => 'update success']);
+            throw $e;
         }
     }
 
@@ -165,7 +188,6 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  DataDb  $data
-     * @return \Illuminate\Http\Response
      */
     public function destroy(DataDb $data)
     {
@@ -175,8 +197,49 @@ class UserController extends Controller
         return response()->json(['success' => 'delete success']);
     }
 
+    /**
+     * export data.
+     */
     public function export()
     {
         return new UserExport($this->type);
+    }
+
+    /**
+     * import Template excel data.
+     */
+    public function importTemplate()
+    {
+        return new UserImportTemplate($this->type);
+    }
+
+    /**
+     * import form.
+     */
+    public function importForm()
+    {
+        return view($this->type . '.import', [
+            'type' => $this->type,
+        ]);
+    }
+
+    /**
+     * store import data.
+     */
+    public function importStore(ImportValidation $request)
+    {
+        try {
+            if ($request->ajax()) {
+                $request->validated();
+
+                Excel::import(new UserImport(), $request->file('file'));
+
+                return response()->json(['success' => 'update success']);
+            }
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }

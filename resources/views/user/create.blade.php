@@ -5,7 +5,7 @@
 @section('content')
 <div class="container shadow-sm bg-body rounded py-4">
   <header class="pb-3 mb-4 border-bottom">
-    <a href="{{ route('user.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
+    <a href="{{ route($type . '.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
       <img src="{{ asset('logo.svg') }}" class="me-2 fill-blue" width="50" height="50" alt="{{ config('app.name', 'Laravel 9') }} | @yield('title')">
       <span class="fs-4">@yield('title')</span>
     </a>
@@ -13,7 +13,7 @@
 
   <div class="row mb-3">
     <div class="col">
-      <form method="POST" action="{{ route('user.store') }}" id="form-create" class="needs-validation" accept-charset="UTF-8" enctype="multipart/form-data" novalidate>
+      <form method="POST" action="{{ route($type . '.store') }}" id="form-create" class="needs-validation" accept-charset="UTF-8" enctype="multipart/form-data" novalidate>
         @csrf
 
         <div class="row mb-3">
@@ -103,7 +103,7 @@
               {{ __('save') }}
             </button>
 
-            <a href="{{ route('user.index') }}" name="cancel" id="cancel" class="btn btn-outline-danger text-uppercase">
+            <a href="{{ route($type . '.index') }}" name="cancel" id="cancel" class="btn btn-outline-danger text-uppercase">
               <i class="fa-solid fa-x me-1"></i>
               {{ __('cancel') }}
             </a>
@@ -159,6 +159,14 @@
           processData: false,
           beforeSend: function() {
             $("button").attr("disabled",true);
+
+            const onlyInputs = document.querySelectorAll('#form-create input');
+            for(var i = 0; i < onlyInputs.length; i++) {
+                name = onlyInputs[i].id;
+                if (name) {
+                  document.getElementById(name).setCustomValidity('');
+                }
+            }
           },
           complete: function() {
             $("button").attr("disabled",false);
@@ -171,22 +179,16 @@
                 title: 'Success',
                 text: 'save successful',
               }).then(function (result) {
-                window.location.href = "{{ route('user.index') }}";
+                window.location.href = "{{ route($type . '.index') }}";
               })
             }
           },
           error: function(jqXhr, json, errorThrown) {
             $("button").attr("disabled",false);
             var data = jqXhr.responseJSON;
-            $('.alert').hide();
-            $.each(data.errors, function(index, value ) {
-              var html = '';
-              html += '<div class="alert alert-danger" role="alert">';
-              html += '<span>' + value + '</span>';
-              html += '</div>';
-              $('#'+index+'Error').html(html);
-
-              document.getElementById(index).setCustomValidity(html);
+            $.each(data.errors, function(index, value) {
+              $('#'+index+'Error').html(value);
+              document.getElementById(index).setCustomValidity(value);
             });
             Swal.fire({
               icon: 'error',

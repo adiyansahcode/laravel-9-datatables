@@ -46,8 +46,10 @@ php -S 127.0.0.1:8080 -t public
 ## Function List
 
 * [x] User CRUD
+* [x] User Export and Import
 * [x] Laravel Migrate and Seeder
 * [x] Laravel Validation
 * [x] DataTables ([yajra](https://github.com/yajra/laravel-datatables))
+* [x] Laravel Excel ([Laravel Excel](https://github.com/SpartnerNL/Laravel-Excel))
 * [x] Bootstrap 5
 * [x] Fortawesome 6
